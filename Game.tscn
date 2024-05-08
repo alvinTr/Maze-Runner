@@ -1,0 +1,73 @@
+[gd_scene load_steps=13 format=3 uid="uid://cwb1gjw8clifr"]
+
+[ext_resource type="Script" path="res://Game.gd" id="1_3fw0o"]
+[ext_resource type="Script" path="res://Maze.gd" id="2_syxn0"]
+[ext_resource type="PackedScene" uid="uid://uv0x1s8766hr" path="res://wall_instance.tscn" id="3_syjce"]
+[ext_resource type="PackedScene" uid="uid://bywa3lou02qwl" path="res://floor_instance.tscn" id="4_xmg6y"]
+[ext_resource type="Script" path="res://Player.gd" id="5_1op5b"]
+[ext_resource type="PackedScene" uid="uid://cksmnded1kuvh" path="res://painting.tscn" id="5_sasyh"]
+[ext_resource type="Script" path="res://OmniLight3D.gd" id="6_uh4l7"]
+[ext_resource type="AudioStream" uid="uid://dqu3bukc833tj" path="res://sounds/Ejimas1.ogg" id="8_cd1iq"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_dob6j"]
+radius = 0.05
+height = 0.1
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_e7tfn"]
+radius = 0.05
+height = 0.1
+
+[sub_resource type="Sky" id="Sky_dj5ws"]
+
+[sub_resource type="Environment" id="Environment_qdr1w"]
+background_mode = 2
+sky = SubResource("Sky_dj5ws")
+fog_enabled = true
+fog_light_color = Color(0, 0, 0, 1)
+
+[node name="GameNode" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0436668, 0, -0.043668)
+script = ExtResource("1_3fw0o")
+
+[node name="MazeNode" type="Node3D" parent="."]
+script = ExtResource("2_syxn0")
+
+[node name="WallInstance" parent="MazeNode" instance=ExtResource("3_syjce")]
+visible = false
+
+[node name="FloorInstance" parent="MazeNode" instance=ExtResource("4_xmg6y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+visible = false
+
+[node name="Painting" parent="MazeNode" instance=ExtResource("5_sasyh")]
+visible = false
+
+[node name="Player" type="CharacterBody3D" parent="."]
+script = ExtResource("5_1op5b")
+
+[node name="Camera3D" type="Camera3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+visible = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player"]
+visible = false
+mesh = SubResource("CapsuleMesh_dob6j")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+visible = false
+shape = SubResource("CapsuleShape3D_e7tfn")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+light_color = Color(1, 0.654902, 0.368627, 1)
+light_energy = 0.3
+light_size = 0.301
+shadow_enabled = true
+omni_attenuation = 3.03143
+script = ExtResource("6_uh4l7")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="Player"]
+stream = ExtResource("8_cd1iq")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_qdr1w")
